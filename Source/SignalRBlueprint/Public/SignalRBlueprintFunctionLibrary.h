@@ -72,6 +72,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "SignalR", Meta = (ExpandEnumAsExecs = "CastResult"))
     static bool AsBool(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult);
 
+    UFUNCTION(BlueprintCallable, Category = "SignalR", Meta = (ExpandEnumAsExecs = "CastResult"))
+    static TMap<FString, FSignalRValueWrapper> AsObject(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult);
+
     UFUNCTION(BlueprintPure, Category = "SignalR")
     static bool HasError(const FSignalRInvokeResultWrapper& SignalRInvokeResult);
 

@@ -49,6 +49,12 @@ public:
     UPROPERTY(BlueprintAssignable)
     FOnHubConnectionClosedEvent OnHubConnectionClosed;
 
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHubEventMessage, const FString&, EventName, const TArray<FSignalRValueWrapper>&, Arguments);
+    UPROPERTY(BlueprintAssignable)
+    FOnHubEventMessage OnHubEventMessage;
+
+    DECLARE_DYNAMIC_DELEGATE_OneParam(FOnSignalREvent, const TArray<FSignalRValueWrapper>&, Arguments);
+
     void SetHubConnection(const TSharedPtr<IHubConnection>& HubConnection);
 
     UFUNCTION(BlueprintCallable, Category = "SignalR")
@@ -65,7 +71,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "SignalR", DisplayName = "Invoke SignalR Method (Latent)", Meta = (AutoCreateRefTerm = "Arguments, OnCompleted"))
     void Invoke(const FString& EventName, const TArray<FSignalRValueWrapper>& Arguments, const FOnInvokeCompleted& OnCompleted);
 
+    UFUNCTION(BlueprintCallable, Category = "SignalR", DisplayName = "On Event Message", Meta = (AutoCreateRefTerm = "EventName, OnEvent"))
+    void BindEvent(const FString& EventName, const FOnSignalREvent& OnEvent);
+
 private:
+    UPROPERTY()
+    TMap<FString, FOnSignalREvent> RegisteredEvents;
+
     void OnInvokeCompleted(const FSignalRInvokeResult& Result, FOnInvokeCompleted Delegate);
 
     void BroadcastOnHubConnected();

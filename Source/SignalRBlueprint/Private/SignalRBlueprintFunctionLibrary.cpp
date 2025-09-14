@@ -119,6 +119,30 @@ bool USignalRBlueprintFunctionLibrary::AsBool(const FSignalRValueWrapper& Signal
     }
 }
 
+TMap<FString, FSignalRValueWrapper> USignalRBlueprintFunctionLibrary::AsObject(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult)
+{
+    TMap<FString, FSignalRValueWrapper> Result;
+
+    if (SignalRValue.InternalValue.IsObject())
+    {
+        CastResult = ESignalRValueCastResult::Success;
+
+        const TMap<FString, FSignalRValue>& NativeMap = SignalRValue.InternalValue.AsObject();
+
+        for (const TPair<FString, FSignalRValue>& Pair : NativeMap)
+        {
+            Result.Add(Pair.Key, FSignalRValueWrapper(Pair.Value));
+        }
+    }
+    else
+    {
+        CastResult = ESignalRValueCastResult::Failed;
+    }
+
+    return Result;
+}
+
+
 bool USignalRBlueprintFunctionLibrary::HasError(const FSignalRInvokeResultWrapper& Result)
 {
     return Result.InternalResult.HasError();

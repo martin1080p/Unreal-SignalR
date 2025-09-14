@@ -76,6 +76,31 @@ void USignalRHubConnectionWrapper::Invoke(const FString& EventName, const TArray
     }
 }
 
+void USignalRHubConnectionWrapper::BindEvent(const FString& EventName, const FOnSignalREvent& OnEvent)
+{
+    // store the delegate in the map
+    RegisteredEvents.Add(EventName, OnEvent);
+
+    if (HubConnection.IsValid())
+    {
+        HubConnection->On(EventName).BindLambda([this, EventName](const TArray<FSignalRValue>& Arguments)
+        {
+            TArray<FSignalRValueWrapper> WrappedArguments;
+            WrappedArguments.Reserve(Arguments.Num());
+            for (const FSignalRValue& Value : Arguments)
+            {
+                WrappedArguments.Add(FSignalRValueWrapper(Value));
+            }
+
+            // call the registered delegate for this event
+            if (RegisteredEvents.Contains(EventName))
+            {
+                RegisteredEvents[EventName].ExecuteIfBound(WrappedArguments);
+            }
+        });
+    }
+}
+
 void USignalRHubConnectionWrapper::OnInvokeCompleted(const FSignalRInvokeResult& Result, FOnInvokeCompleted Delegate)
 {
     Delegate.ExecuteIfBound(Result);
