@@ -49,6 +49,18 @@ FSignalRValueWrapper USignalRBlueprintFunctionLibrary::MakeBool(bool Value)
     return FSignalRValue(Value);
 }
 
+FSignalRValueWrapper USignalRBlueprintFunctionLibrary::MakeObject(const TMap<FString, FSignalRValueWrapper>& Value)
+{
+    TMap<FString, FSignalRValue> ConvertedMap;
+
+    for (const auto& Kvp : Value)
+    {
+        ConvertedMap.Add(Kvp.Key, Kvp.Value.InternalValue);
+    }
+
+    return FSignalRValue(ConvertedMap);
+}
+
 int64 USignalRBlueprintFunctionLibrary::AsInt(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult)
 {
     if (SignalRValue.InternalValue.IsNumber())

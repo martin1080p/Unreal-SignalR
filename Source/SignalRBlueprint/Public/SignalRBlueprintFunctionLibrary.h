@@ -57,6 +57,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "SignalR", Meta = (DisplayName = "SignalR Make Bool"))
     static FSignalRValueWrapper MakeBool(bool Value);
 
+    UFUNCTION(BlueprintPure, Category = "SignalR", Meta = (DisplayName = "SignalR Make Object"))
+    static FSignalRValueWrapper MakeObject(const TMap<FString, FSignalRValueWrapper>& Value);
+
     UFUNCTION(BlueprintCallable, Category = "SignalR", Meta = (ExpandEnumAsExecs = "CastResult"))
     static int64 AsInt(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult);
 
