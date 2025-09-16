@@ -61,6 +61,19 @@ FSignalRValueWrapper USignalRBlueprintFunctionLibrary::MakeObject(const TMap<FSt
     return FSignalRValue(ConvertedMap);
 }
 
+FSignalRValueWrapper USignalRBlueprintFunctionLibrary::MakeArray(const TArray<FSignalRValueWrapper>& Value)
+{
+    TArray<FSignalRValue> ConvertedArray;
+
+    for (const auto& v : Value)
+    {
+        ConvertedArray.Add(v.InternalValue);
+    }
+
+    return FSignalRValue(ConvertedArray);
+}
+
+
 int64 USignalRBlueprintFunctionLibrary::AsInt(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult)
 {
     if (SignalRValue.InternalValue.IsNumber())
@@ -144,6 +157,29 @@ TMap<FString, FSignalRValueWrapper> USignalRBlueprintFunctionLibrary::AsObject(c
         for (const TPair<FString, FSignalRValue>& Pair : NativeMap)
         {
             Result.Add(Pair.Key, FSignalRValueWrapper(Pair.Value));
+        }
+    }
+    else
+    {
+        CastResult = ESignalRValueCastResult::Failed;
+    }
+
+    return Result;
+}
+
+TArray<FSignalRValueWrapper> USignalRBlueprintFunctionLibrary::AsArray(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult)
+{
+    TArray<FSignalRValueWrapper> Result;
+
+    if (SignalRValue.InternalValue.IsArray())
+    {
+        CastResult = ESignalRValueCastResult::Success;
+
+        const TArray<FSignalRValue>& NativeArray = SignalRValue.InternalValue.AsArray();
+
+        for (const FSignalRValue& Element : NativeArray)
+        {
+            Result.Add(Element);
         }
     }
     else

@@ -60,6 +60,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "SignalR", Meta = (DisplayName = "SignalR Make Object"))
     static FSignalRValueWrapper MakeObject(const TMap<FString, FSignalRValueWrapper>& Value);
 
+    UFUNCTION(BlueprintPure, Category = "SignalR", Meta = (DisplayName = "SignalR Make Array"))
+    static FSignalRValueWrapper MakeArray(const TArray<FSignalRValueWrapper>& Value);
+
     UFUNCTION(BlueprintCallable, Category = "SignalR", Meta = (ExpandEnumAsExecs = "CastResult"))
     static int64 AsInt(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult);
 
@@ -77,6 +80,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "SignalR", Meta = (ExpandEnumAsExecs = "CastResult"))
     static TMap<FString, FSignalRValueWrapper> AsObject(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult);
+
+    UFUNCTION(BlueprintCallable, Category = "SignalR", Meta = (ExpandEnumAsExecs = "CastResult"))
+    static TArray<FSignalRValueWrapper> AsArray(const FSignalRValueWrapper& SignalRValue, ESignalRValueCastResult& CastResult);
 
     UFUNCTION(BlueprintPure, Category = "SignalR")
     static bool HasError(const FSignalRInvokeResultWrapper& SignalRInvokeResult);
